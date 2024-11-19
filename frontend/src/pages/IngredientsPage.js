@@ -7,37 +7,33 @@ import { Link } from "react-router-dom";
 
 const IngredientsPage = () => {
   const [ingredients, setIngredients] = useState([]);
+  const [existingIngredients, setExistingIngredients] = useState([]);
 
-  const handleDelete = (id) => {
-    axios
-      .delete(`${url}/ingredients/delete/${id}`)
-      .then((res) => {
-        setIngredients((prevIngredients) =>
-          prevIngredients.filter((ingredient) => ingredient.ingredientID !== id)
-        );
-      })
-      .catch((err) => console.log(err));
-  };
-
-  function addIngredient(newIngredient) {
-    setIngredients((prevIngredients) => {
-      return [...prevIngredients, newIngredient];
-    });
-  }
-
-  useEffect(() => {
+  const fetchIngredients = () => {
     axios
       .get(`${url}/ingredients`)
       .then((res) => {
         setIngredients(res.data);
+        setExistingIngredients(res.data.map((ingredient) => ingredient.ingredientName));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error("Error fetching ingredients:", err));
+  };
+
+  useEffect(() => {
+    fetchIngredients();
   }, []);
+
+  const handleDelete = (id) => {
+    axios
+      .delete(`${url}/ingredients/delete/${id}`)
+      .then(() => fetchIngredients()) // Refetch data after delete
+      .catch((err) => console.error("Error deleting ingredient:", err));
+  };
 
   return (
     <div className="container mt-4">
       <Header header="LIST OF INGREDIENTS" />
-      <AddIngredient onAdd={addIngredient} />
+      <AddIngredient fetchIngredients={fetchIngredients} existingIngredients={existingIngredients}  />
       <div className="table-responsive">
         <table className="table table-sm table-bordered table-hover">
           <thead>

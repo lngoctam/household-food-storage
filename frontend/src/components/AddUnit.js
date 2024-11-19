@@ -1,75 +1,42 @@
 import React, { useState } from "react";
 import axios from "axios";
 import url from "../data/setting";
-import FetchExistingData from "./FetchExistingData";
 
-const NewUnit = (props) => {
-  const [newUnit, setNewUnit] = useState({
-    unitName: "",
-  });
+const NewUnit = ({ existingUnits, fetchUnits }) => {
+  const [unitName, setUnitName] = useState("");
   const [error, setError] = useState("");
-  const [existingUnits, setExistingUnits] = useState([]);
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-
-    setNewUnit((prevUnit) => {
-      return {
-        ...prevUnit,
-        [name]: value,
-      };
-    });
-  }
-
-  function submitUnit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    if (existingUnits.includes(newUnit.unitName)) {
+
+    // Check for duplicates
+    if (existingUnits.includes(unitName)) {
       setError("This unit name already exists.");
-      setNewUnit({ unitName: "" });
-      return; 
-    }    
+      return;
+    }
+
+    // Add new unit
     setError("");
-
     axios
-      .post(`${url}/units`, newUnit)
-      .then((response) => {
-        console.log("Unit added:", response.data);
-        props.onAdd(response.data); 
-
-        setExistingUnits((prevUnits) => [
-          ...prevUnits,
-          response.data.unitName,
-        ]);
-
-        setNewUnit({ unitName: "" }); //clear input field after adding
-
+      .post(`${url}/units`, { unitName })
+      .then(() => {
+        fetchUnits(); 
+        setUnitName(""); 
       })
-      .catch((error) => {
-        console.error("There was an error adding the unit!", error);
-      });
-  }
-  return (
-    <div>
-      <FetchExistingData
-        url={url}
-        tableName="units"
-        itemName="unitName"
-        setExistingData={setExistingUnits}
+      .catch((err) => console.error("Error adding unit:", err));
+  };
+  return (    
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={unitName}
+        onChange={(e) => setUnitName(e.target.value)}
+        placeholder="Add a new unit"
       />
-      <form onSubmit={submitUnit}>
-        <input
-          name="unitName"
-          onChange={handleChange}
-          value={newUnit.unitName}
-          placeholder="Add a new unit name"
-        />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button>Add</button>
-      </form>
-    </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button type="submit">Add</button>
+    </form>
   );
 };
 
 export default NewUnit;
-
-

@@ -1,19 +1,28 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
+
 /frontend/node_modules
-/.pnp
-.pnp.js
+/frontend/.pnp
+/frontend/.pnp.js
+
 /backend/node_modules
+/backend/.pnp
+/backend/.pnp.js
 
 # testing
-/coverage
+/frontend/coverage
+
+/backend/coverage
 
 # production
-/build
+/frontend/build
+
+/backend/build
 
 # misc
 /frontend/.DS_Store
+/frontend/.env 
 /frontend/.env.local
 /frontend/.env.development.local
 /frontend/.env.test.local
@@ -23,7 +32,9 @@
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
 
+
 /backend/.DS_Store
+/backend/.env 
 /backend/.env.local
 /backend/.env.development.local
 /backend/.env.test.local
@@ -32,3 +43,5 @@
 /backend/npm-debug.log*
 /backend/yarn-debug.log*
 /backend/yarn-error.log*
+
+/backend/db-connector.js

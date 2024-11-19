@@ -1,71 +1,41 @@
 import React, { useState } from "react";
 import axios from "axios";
 import url from "../data/setting";
-import FetchExistingData from "./FetchExistingData";
 
-const NewIngredient = (props) => {
-  const [newIngredient, setNewIngredient] = useState({
-    ingredientName: "",
-  });
-
+const NewIngredient = ({ existingIngredients, fetchIngredients }) => {
+  const [ingredientName, setIngredientName] = useState("");
   const [error, setError] = useState("");
-  const [existingIngredients, setExistingIngredients] = useState([]);
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-
-    setNewIngredient((prevIngredient) => {
-      return {
-        ...prevIngredient,
-        [name]: value,
-      };
-    });
-  }
-
-  function submitIngredient(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (existingIngredients.includes(newIngredient.ingredientName)) {
+    // Check for duplicates
+    if (existingIngredients.includes(ingredientName)) {
       setError("This ingredient name already exists.");
-      setNewIngredient({ ingredientName: "" });
       return;
     }
+
+    // Add new ingredient
     setError("");
-
     axios
-      .post(`${url}/ingredients`, newIngredient)
-      .then((response) => {
-        console.log("Ingredient added:", response.data);
-        props.onAdd(response.data);
-
-        setExistingIngredients((prevIngredients) => [
-          ...prevIngredients,
-          response.data.catName,
-        ]);
-        setNewIngredient({ ingredientName: "" }); //clear input field after adding
+      .post(`${url}/ingredients`, { ingredientName })
+      .then(() => {
+        fetchIngredients(); // Refetch ingredients from the backend
+        setIngredientName(""); // Clear input
       })
-      .catch((error) => {
-        console.error("There was an error adding the ingredient!", error);
-      });
-  }
-  return (
-    <div>
-      <FetchExistingData
-        url={url}
-        tableName="ingredients"
-        itemName="ingredientName"
-        setExistingData={setExistingIngredients}
+      .catch((err) => console.error("Error adding ingredient:", err));
+  };
+  return (    
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={ingredientName}
+        onChange={(e) => setIngredientName(e.target.value)}
+        placeholder="Add a new ingredient"
       />
-      <form onSubmit={submitIngredient}>
-        <input
-          name="ingredientName"
-          onChange={handleChange}
-          value={newIngredient.ingredientName}
-          placeholder="Add a new ingredient name"
-        />
-        <button>Add</button>
-      </form>
-    </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button type="submit">Add</button>
+    </form>
   );
 };
 

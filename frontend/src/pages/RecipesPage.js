@@ -9,37 +9,60 @@ const RecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
-  const handleDelete = (id) => {
-    console.log("Delete triggered for ID:", id);
-    axios
-      .delete(`${url}/recipes/delete/${id}`)
-      .then((res) => {
-        if (res.status === 200) {
-          // Ensure the response indicates success
-          console.log("Delete response:", res);
-          // Update both `recipes` and `filteredRecipes` state
-          setRecipes((prevRecipes) =>
-            prevRecipes.filter((recipe) => recipe.recipeID !== id)
-          );
-          setFilteredRecipes((prevFiltered) =>
-            prevFiltered.filter((recipe) => recipe.recipeID !== id)
-          );
-        } else {
-          console.log("Failed to delete recipe:", res.data);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+  // const handleDelete = (id) => {
+  //   console.log("Delete triggered for ID:", id);
+  //   axios
+  //     .delete(`${url}/recipes/delete/${id}`)
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         // Ensure the response indicates success
+  //         console.log("Delete response:", res);
+  //         // Update both `recipes` and `filteredRecipes` state
+  //         setRecipes((prevRecipes) =>
+  //           prevRecipes.filter((recipe) => recipe.recipeID !== id)
+  //         );
+  //         setFilteredRecipes((prevFiltered) =>
+  //           prevFiltered.filter((recipe) => recipe.recipeID !== id)
+  //         );
+  //       } else {
+  //         console.log("Failed to delete recipe:", res.data);
+  //       }
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   axios
+  //     .get(`${url}/recipes`)
+  //     .then((res) => {
+  //       setRecipes(res.data);
+  //       setFilteredRecipes(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+  const [recipeNames, setRecipeNames] = useState([]);
+  const fetchRecipes = () => {
     axios
       .get(`${url}/recipes`)
       .then((res) => {
         setRecipes(res.data);
         setFilteredRecipes(res.data);
+        setRecipeNames(res.data.map((r) => r.recipeName));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error("Error fetching recipe:", err));
+  };
+
+  useEffect(() => {
+    fetchRecipes();
   }, []);
+
+  const handleDelete = (id) => {
+    axios
+      .delete(`${url}/recipes/delete/${id}`)
+      .then(() => fetchRecipes()) // Refetch data after delete
+      .catch((err) => console.error("Error deleting recipe:", err));
+  };
 
   const Filter = (event) => {
     setFilteredRecipes(
@@ -53,7 +76,13 @@ const RecipesPage = () => {
     <div className="container mt-4">
       <Header header="LIST OF RECIPES" />
       <div className="d-flex justify-content-end">
-        <Link to="/recipes/add" className="btn btn-outline-success">
+        <Link
+          to={{
+            pathname: "/recipes/add",
+            state: { recipeNames },
+          }}
+          className="btn btn-outline-success"
+        >
           ADD A NEW RECIPE
         </Link>
       </div>

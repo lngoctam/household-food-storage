@@ -6,38 +6,35 @@ import url from "../data/setting";
 import { Link } from "react-router-dom";
 
 const CategoriesPage = () => {
-  const [category, setCategory] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [existingCategories, setExistingCategories] = useState([]);
+
+  const fetchCategories = () => {
+    axios
+      .get(`${url}/categories`)
+      .then((res) => {
+        setCategories(res.data);
+        setExistingCategories(res.data.map((category) => category.catName));
+      })
+      .catch((err) => console.error("Error fetching categories:", err));
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handleDelete = (id) => {
     axios
       .delete(`${url}/categories/delete/${id}`)
-      .then((res) => {
-        setCategory((prevCategories) =>
-          prevCategories.filter((category) => category.catID !== id)
-        );
-      })
-      .catch((err) => console.log(err));
+      .then(() => fetchCategories()) // Refetch data after delete
+      .catch((err) => console.error("Error deleting category:", err));
   };
 
-  function addCategory(newCategory) {
-    setCategory((prevCategories) => {
-      return [...prevCategories, newCategory];
-    });
-  }
-
-  useEffect(() => {
-    axios
-      .get(`${url}/categories`)
-      .then((res) => {
-        setCategory(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   return (
     <div className="container mt-4">
       <Header header="LIST OF CATEGORIES" />
-      <AddCategory onAdd={addCategory} />
+      <AddCategory fetchCategories={fetchCategories} existingCategories={existingCategories} />
       <div className="table-responsive">
         <table className="table table-sm table-bordered table-hover">
           <thead>
@@ -54,7 +51,7 @@ const CategoriesPage = () => {
             </tr>
           </thead>
           <tbody>
-            {category.map((item, index) => {
+            {categories.map((item, index) => {
               return (
                 <tr className="text-center" key={item.catID}>
                   <th scope="row" style={{ width: "33.33%" }}>

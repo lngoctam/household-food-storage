@@ -74,7 +74,6 @@ router.post("/", (req, res) => {
       recipeID: result.insertId,
     });
   });
-  // });
 });
 
 router.delete("/delete/:recipeID", (req, res) => {

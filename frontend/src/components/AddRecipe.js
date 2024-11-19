@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Select from "react-dropdown-select";
 import url from "../data/setting";
 
 const AddRecipe = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const recipeNames = state ? state.recipeNames : [];
   const initialValues = {
     recipeName: "Sample Recipe",
     calories: "100",
@@ -17,13 +19,13 @@ const AddRecipe = () => {
     catID: 1,
   };
   const [recipes, setRecipes] = useState(initialValues);
-
   const [selectedCategory, setSelectedCategory] = useState([]);
+  const [categories, setCategories] = useState([]);
+
   function handleCatSelect(selected) {
     setSelectedCategory(selected);
   }
-
-  const [categories, setCategories] = useState([]);
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -55,6 +57,10 @@ const AddRecipe = () => {
 
   function submitRecipe(event) {
     event.preventDefault();
+    if (recipeNames.includes(recipes.recipeName)) {
+      alert("This recipe name already exists. Please choose a different name.");
+      return; // Prevent form submission
+    }
     console.log("Submitting recipe:", recipes);
 
     axios

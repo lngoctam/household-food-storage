@@ -6,42 +6,67 @@ import url from "../data/setting";
 import { Link } from "react-router-dom";
 
 const IngredientListsPage = () => {
+  // const [ingredientLists, setIngredientLists] = useState([]);
+
+  // const handleDelete = (id) => {
+  //   axios
+  //     .delete(`${url}/ingredientLists/delete/${id}`)
+  //     .then((res) => {
+  //       setIngredientLists((prevIngredientLists) =>
+  //         prevIngredientLists.filter(
+  //           (ingredientList) => ingredientList.ingredientListID !== id
+  //         )
+  //       );
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  // function addIngredientList(newIngredientList) {
+  //   setIngredientLists((prevIngredientLists) => {
+  //     return [...prevIngredientLists, newIngredientList];
+  //   });
+  // }
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`${url}/ingredientLists`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setIngredientLists(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+
   const [ingredientLists, setIngredientLists] = useState([]);
+  const [existingIngredientLists, setExistingIngredientLists] = useState([]);
+
+  const fetchIngredientLists = () => {
+    axios
+      .get(`${url}/ingredientLists`)
+      .then((res) => {
+        setIngredientLists(res.data);
+        // setExistingIngredientLists(res.data.map((il) => il.unitName));
+      })
+      .catch((err) => console.error("Error fetching ingredient lists:", err));
+  };
+
+  useEffect(() => {
+    fetchIngredientLists();
+  }, []);
 
   const handleDelete = (id) => {
     axios
       .delete(`${url}/ingredientLists/delete/${id}`)
-      .then((res) => {
-        setIngredientLists((prevIngredientLists) =>
-          prevIngredientLists.filter(
-            (ingredientList) => ingredientList.ingredientListID !== id
-          )
-        );
-      })
-      .catch((err) => console.log(err));
+      .then(() => fetchIngredientLists()) // Refetch data after delete
+      .catch((err) => console.error("Error deleting ingredient lists:", err));
   };
 
-  function addIngredientList(newIngredientList) {
-    setIngredientLists((prevIngredientLists) => {
-      return [...prevIngredientLists, newIngredientList];
-    });
-  }
-
-  useEffect(() => {
-    axios
-      .get(`${url}/ingredientLists`)
-      .then((res) => {
-        console.log(res.data);
-        setIngredientLists(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   return (
     <div>
       <div className="container mt-4">
-        <Header header="INGREDIENTS FOR RECIPES" className="row-gap-3" />
-        <AddIngredientList onAdd={addIngredientList} />
+        <Header header="INGREDIENT LISTS FOR RECIPES" className="row-gap-3" />
+        <AddIngredientList fetchIngredientLists={fetchIngredientLists} />
         <div className="table-responsive">
           <table className="table table-sm table-bordered table-hover">
             <thead>

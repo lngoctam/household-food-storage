@@ -6,38 +6,34 @@ import AddStorage from "../components/AddStorage";
 import url from "../data/setting";
 
 const StoragesPage = () => {
-  const [storage, setStorage] = useState([]);
+  const [storages, setStorages] = useState([]);
+  const [existingStorages, setExistingStorages] = useState([]);
+
+  const fetchStorages = () => {
+    axios
+      .get(`${url}/storages`)
+      .then((res) => {
+        setStorages(res.data);
+        setExistingStorages(res.data.map((s) => s.storageName));
+      })
+      .catch((err) => console.error("Error fetching storages:", err));
+  };
+
+  useEffect(() => {
+    fetchStorages();
+  }, []);
 
   const handleDelete = (id) => {
     axios
       .delete(`${url}/storages/delete/${id}`)
-      .then((res) => {
-        setStorage((prevStorages) =>
-          prevStorages.filter((storage) => storage.storageID !== id)
-        );
-      })
-      .catch((err) => console.log(err));
+      .then(() => fetchStorages()) // Refetch data after delete
+      .catch((err) => console.error("Error deleting storage:", err));
   };
-
-  function addStorage(newStorage) {
-    setStorage((prevStorages) => {
-      return [...prevStorages, newStorage];
-    });
-  }
-
-  useEffect(() => {
-    axios
-      .get(`${url}/storages`)
-      .then((res) => {
-        setStorage(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   return (
     <div className="container mt-4">
       <Header header="LIST OF STORAGES" />
-      <AddStorage onAdd={addStorage} />
+      <AddStorage fetchStorages={fetchStorages} existingStorages={existingStorages} />
       <div className="table-responsive">
         <table className="table table-sm table-bordered table-hover">
           <thead>
@@ -54,7 +50,7 @@ const StoragesPage = () => {
             </tr>
           </thead>
           <tbody>
-            {storage.map((item, index) => {
+            {storages.map((item, index) => {
               return (
                 <tr className="text-center" key={item.storageID}>
                   <th scope="row" style={{ width: "33.33%" }}>

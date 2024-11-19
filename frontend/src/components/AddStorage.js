@@ -1,72 +1,41 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import url from "../data/setting";
-import FetchExistingData from "./FetchExistingData";
 
-const NewStorage = (props) => {
-  const [newStorage, setNewStorage] = useState({
-    storageName: "",
-  });
+const NewStorage = ({ existingStorages, fetchStorages }) => {
+  const [storageName, setStorageName] = useState("");
   const [error, setError] = useState("");
-  const [existingStorages, setExistingStorages] = useState([]);
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setNewStorage((prevStorage) => {
-      return {
-        ...prevStorage,
-        [name]: value,
-      };
-    });
-  }
-
-  function submitStorage(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("New Storage to be added:", newStorage);
-    console.log("existing storages:", existingStorages)
-    if (existingStorages.includes(newStorage.storageName)) {
+
+    // Check for duplicates
+    if (existingStorages.includes(storageName)) {
       setError("This storage name already exists.");
-      setNewStorage({ storageName: "" });
-      return; 
-    }    
+      return;
+    }
+
+    // Add new storage
     setError("");
-
     axios
-      .post(`${url}/storages`, newStorage)
-      .then((response) => {
-        console.log("Storage added:", response.data);
-        props.onAdd(response.data);
-
-        setExistingStorages((prevStorages) => [
-          ...prevStorages,
-          response.data.storageName,
-        ]);
-
-        setNewStorage({ storageName: "" }); //clear input field after adding
+      .post(`${url}/storages`, { storageName })
+      .then(() => {
+        fetchStorages(); // Refetch storages from the backend
+        setStorageName(""); // Clear input
       })
-      .catch((error) => {
-        console.error("There was an error adding the storage!", error);
-      });
-  }
+      .catch((err) => console.error("Error adding storage:", err));
+  };
   return (
-    <div>
-      <FetchExistingData
-        url={url}
-        tableName="storages"
-        itemName="storageName"
-        setExistingData={setExistingStorages}
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={storageName}
+        onChange={(e) => setStorageName(e.target.value)}
+        placeholder="Add a new storage"
       />
-      <form onSubmit={submitStorage}>
-        <input
-          name="storageName"
-          onChange={handleChange}
-          value={newStorage.storageName}
-          placeholder="Add a new storage name"
-        />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button>Add</button>
-      </form>
-    </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button type="submit">Add</button>
+    </form>
   );
 };
 

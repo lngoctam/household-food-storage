@@ -8,6 +8,11 @@ const NewIngredientList = (props) => {
   const [ingredients, setIngredients] = useState([]);
   const [units, setUnits] = useState([]);
 
+  const [recipeError, setRecipeError] = useState("");
+  const [ingredientError, setIngredientError] = useState("");
+  const [unitError, setUnitError] = useState("");
+  const [quantityError, setQuantityError] = useState("");
+
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [selectedUnit, setSelectedUnit] = useState(null);
@@ -66,9 +71,33 @@ const NewIngredientList = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let hasError = false;
 
-    if (!selectedRecipe || !selectedIngredient || !quantityNeeded || !selectedUnit) {
-      alert("Please fill in all fields.");
+    // Reset error messages
+    setRecipeError("");
+    setIngredientError("");
+    setUnitError("");
+    setQuantityError("");
+
+    // Check for empty fields
+    if (!selectedRecipe) {
+      setRecipeError("Please select a recipe.");
+      hasError = true;
+    }
+    if (!selectedIngredient) {
+      setIngredientError("Please select an ingredient.");
+      hasError = true;
+    }
+    if (!quantityNeeded) {
+      setQuantityError("Please enter the quantity needed.");
+      hasError = true;
+    }
+    if (!selectedUnit) {
+      setUnitError("Please select a unit.");
+      hasError = true;
+    }
+
+    if (hasError) {
       return;
     }
 
@@ -99,6 +128,7 @@ const NewIngredientList = (props) => {
             values={selectedRecipe ? [{ value: selectedRecipe }] : []}
             name="recipe"
           />
+          {recipeError && <p style={{ color: "red" }}>{recipeError}</p>}
         </div>
         <div className="form-group col-md-3">
           <label>Ingredient</label>
@@ -109,6 +139,7 @@ const NewIngredientList = (props) => {
             values={selectedIngredient ? [{ value: selectedIngredient }] : []}
             name="ingredient"
           />
+          {ingredientError && <p style={{ color: "red" }}>{ingredientError}</p>}
         </div>
         <div className="form-group col-md-2">
           <label>Quanity Needed</label>
@@ -119,6 +150,7 @@ const NewIngredientList = (props) => {
             value={quantityNeeded}
             onChange={(e) => setQuantityNeeded(e.target.value)}
           />
+          {quantityError && <p style={{ color: "red" }}>{quantityError}</p>}
         </div>
         <div className="form-group col-md-2">
           <label>Unit</label>
@@ -129,6 +161,7 @@ const NewIngredientList = (props) => {
             values={selectedUnit ? [{ value: selectedUnit }] : []}
             name="unit"
           />
+          {unitError && <p style={{ color: "red" }}>{unitError}</p>}
         </div>
         <div className="form-group col-md-1">
           <label>&nbsp;</label>

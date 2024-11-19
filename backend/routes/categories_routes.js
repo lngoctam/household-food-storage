@@ -7,7 +7,7 @@ router.get("/", (req, res) => {
   db.pool.query(sql, (err, data) => {
     if (err) {
       console.error("Error executing query:", err);
-    return res.status(500).json({ message: "Database error", error: err });
+      return res.status(500).json({ message: "Database error", error: err });
     }
     return res.json(data);
   });
@@ -23,19 +23,35 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const sql = "INSERT INTO Categories (`catName`) VALUES (?)";
-  const values = req.body.catName;
-  db.pool.query(sql, [values], (err, data) => {
-    if (err) {
-      console.log("Error:", err);
-      return res.status(500).json("Error");
+  const { categoryName } = req.body;
+
+  // Check if category already exists
+  db.query(
+    "SELECT * FROM categories WHERE name = ?",
+    [categoryName],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      if (result.length > 0) {
+        return res.status(409).json({ error: "Category already exists" });
+      }
+
+      // adding the new category
+      db.query(
+        "INSERT INTO categories (name) VALUES (?)",
+        [categoryName],
+        (err) => {
+          if (err) {
+            return res.status(500).json({ error: "Failed to add category" });
+          }
+
+          res.status(201).json({ message: "Category added successfully" });
+        }
+      );
     }
-    const newCategory = {
-      catID: data.insertId,
-      catName: values,
-    };
-    res.status(201).json(newCategory); //
-  });
+  );
 });
 
 router.delete("/delete/:catID", (req, res) => {

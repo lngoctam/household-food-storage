@@ -1,74 +1,44 @@
 import React, { useState } from "react";
 import axios from "axios";
 import url from "../data/setting";
-import FetchExistingData from "./FetchExistingData";
 
-const AddCategory = (props) => {
-  const [newCat, setNewCategory] = useState({
-    catName: "",
-  });
-
+const NewCategory = ({ existingCategories, fetchCategories }) => {
+  const [categoryName, setCategoryName] = useState("");
   const [error, setError] = useState("");
-  const [existingCategories, setExistingCategories] = useState([]);
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-    console.log("Category name being updated:", value);
-    setNewCategory((prevCategory) => {
-      return {
-        ...prevCategory,
-        [name]: value,
-      };
-    });
-  }
-
-  function submitCategory(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (existingCategories.includes(newCat.catName)) {
-      setError("This storage name already exists.");
-      setNewCategory({ catName: "" });
+    // Check for duplicates
+    if (existingCategories.includes(categoryName)) {
+      setError("This category name already exists.");
       return;
     }
+
+    // Add new category
     setError("");
-
     axios
-      .post(`${url}/categories`, newCat)
-      .then((response) => {
-        console.log("Category added:", response.data);
-        props.onAdd(response.data);
-
-        setExistingCategories((prevCategories) => [
-          ...prevCategories,
-          response.data.catName,
-        ]);
-
-        setNewCategory({ catName: "" }); //clear input field after adding
+      .post(`${url}/categories`, { catName: categoryName })
+      .then(() => {
+        fetchCategories();
+        setCategoryName("");
       })
-      .catch((error) => {
-        console.error("There was an error adding the category!", error);
-      });
-  }
+      .catch((err) => console.error("Error adding category:", err));
+
+    console.log("Category data being sent:", { categoryName });
+  };
   return (
-    <div>
-      <FetchExistingData
-        url={url}
-        tableName="categories"
-        itemName="catName"
-        setExistingData={setExistingCategories}
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={categoryName}
+        onChange={(e) => setCategoryName(e.target.value)}
+        placeholder="Add a new category"
       />
-      <form onSubmit={submitCategory}>
-        <input
-          name="catName"
-          onChange={handleChange}
-          value={newCat.catName}
-          placeholder="Add a new category name"
-        />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button>Add</button>
-      </form>
-    </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button type="submit">Add</button>
+    </form>
   );
 };
 
-export default AddCategory;
+export default NewCategory;

@@ -7,6 +7,7 @@ const NewIngredientList = (props) => {
   const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [units, setUnits] = useState([]);
+  const [error, setError] = useState("");
 
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
@@ -66,11 +67,19 @@ const NewIngredientList = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let hasError = false;
 
-    if (!selectedRecipe || !selectedIngredient || !quantityNeeded || !selectedUnit) {
-      alert("Please fill in all fields.");
+    if (
+      !selectedRecipe ||
+      !selectedIngredient ||
+      !quantityNeeded ||
+      !selectedUnit
+    ) {
+      setError("Please fill in all fields.");
+      hasError = true;
       return;
     }
+    setError("");
 
     const payload = {
       recipeID: selectedRecipe,
@@ -131,6 +140,7 @@ const NewIngredientList = (props) => {
           />
         </div>
         <div className="form-group col-md-1">
+          {hasError && <p style={{ color: "red" }}>{error}</p>}
           <label>&nbsp;</label>
           <button className="form-control btn btn-outline-primary">Add</button>
         </div>
