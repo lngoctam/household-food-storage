@@ -1,0 +1,80 @@
+const ingredientLists_data = [
+  {
+    ingredientListID: 1,
+    recipeID: 1,
+    ingredientID: 3,
+    quantityNeeded: 4,
+  },
+  {
+    ingredientListID: 2,
+    recipeID: 1,
+    ingredientID: 4,
+    quantityNeeded: 3,
+  },
+  {
+    ingredientListID: 3,
+    recipeID: 1,
+    ingredientID: 5,
+    quantityNeeded: 3,
+  },
+  {
+    ingredientListID: 4,
+    recipeID: 2,
+    ingredientID: 1,
+    quantityNeeded: 1,
+  },
+  {
+    ingredientListID: 5,
+    recipeID: 2,
+    ingredientID: 2,
+    quantityNeeded: 2,
+  },
+  {
+    ingredientListID: 6,
+    recipeID: 2,
+    ingredientID: 3,
+    quantityNeeded: 1,
+  },
+  {
+    ingredientListID: 7,
+    recipeID: 2,
+    ingredientID: 11,
+    quantityNeeded: 1,
+  },
+  {
+    ingredientListID: 8,
+    recipeID: 3,
+    ingredientID: 6,
+    quantityNeeded: 2,
+  },
+  {
+    ingredientListID: 9,
+    recipeID: 3,
+    ingredientID: 7,
+    quantityNeeded: 2,
+  },
+  {
+    ingredientListID: 10,
+    recipeID: 3,
+    ingredientID: 8,
+    quantityNeeded: 2,
+  },
+  {
+    ingredientListID: 11,
+    recipeID: 3,
+    ingredientID: 9,
+    quantityNeeded: 1,
+  },
+  {
+    ingredientListID: 12,
+    recipeID: 3,
+    ingredientID: 11,
+    quantityNeeded: 1,
+  },
+  {
+    ingredientListID: 13,
+    recipeID: 3,
+    ingredientID: 10,
+    quantityNeeded: 3,
+  },
+];
