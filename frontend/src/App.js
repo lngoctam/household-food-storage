@@ -18,6 +18,8 @@ import UpdateStorage from "./components/UpdateStorage";
 import UpdateUnit from "./components/UpdateUnit";
 import UpdateCategory from "./components/UpdateCategory";
 import UpdateIngredient from "./components/UpdateIngredient";
+import UpdateIngredientLists from "./components/UpdateIngredientLists";
+import UpdateRecipe from "./components/UpdateRecipe";
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -38,12 +40,13 @@ const App = () => {
         <Route path="/storages" element={<Storages />} />
         <Route path="/units" element={<Units />} />
         <Route path="/ingredientLists" element={<IngredientLists />} />
+        <Route path="/ingredientLists/update/:id" element={<UpdateIngredientLists />} />
 
         <Route path="/storages/update/:id" element={<UpdateStorage />} />
         <Route path="/units/update/:id" element={<UpdateUnit />} />
         <Route path="/categories/update/:id" element={<UpdateCategory />} />
-        <Route path="/ingredients/update/:id" element={<Ingredients />} />
-        
+        <Route path="/ingredients/update/:id" element={<UpdateIngredient />} />
+        <Route path="/recipes/update/:id" element={<UpdateRecipe />} />        
 
         <Route path="*" element={<HomePage />} />
       </Routes>

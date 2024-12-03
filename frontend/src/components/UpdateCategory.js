@@ -8,7 +8,7 @@ const UpdateCategory = (props) => {
   const navigate = useNavigate();
 
   const [category, setCategory] = useState({
-    categoryName: "",
+    catName: "",
     newCategoryName: "",
   });
 
@@ -18,7 +18,7 @@ const UpdateCategory = (props) => {
       .then((res) => {
         console.log(res);
         setCategory({
-          categoryName: res.data[0].catName,
+          catName: res.data[0].catName,
           newCategoryName: "",
         });
       })
@@ -36,7 +36,7 @@ const UpdateCategory = (props) => {
   function submitUpdate(event) {
     event.preventDefault();
     const updatedCategory = {
-      CategoryName: category.newCategoryName,
+      catName: category.newCategoryName,
     };
     axios
       .patch(`${url}/categories/update/${id}`, updatedCategory, {

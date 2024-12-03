@@ -38,7 +38,7 @@ router.post("/", (req, res) => {
     catID,
   } = req.body;
 
-  const sql = `INSERT INTO Recipes (recipeName, calories, servings, instruction, prepTime, cookTime, totalTime, catID) 
+    const sql = `INSERT INTO Recipes (recipeName, calories, servings, instruction, prepTime, cookTime, totalTime, catID) 
      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
   const values = [
     recipeName,
@@ -88,28 +88,9 @@ router.delete("/delete/:recipeID", (req, res) => {
 router.patch("/update/:id", (req, res) => {
   const id = req.params.id;
   console.log("recipeID " + id);
-  const {
-    recipeName,
-    calories,
-    servings,
-    instruction,
-    prepTime,
-    cookTime,
-    totalTime,
-    catID,
-  } = req.body;
-  const sql = `UPDATE Recipes SET recipeName=?, calories=?, servings=?, instruction=?, prepTime=?, cookTime=?, totalTime=?, catID=? WHERE recipeID=?`;
-  const values = [
-    recipeName,
-    calories,
-    servings,
-    instruction,
-    prepTime,
-    cookTime,
-    totalTime,
-    catID,
-    id,
-  ];
+  const { recipeName } = req.body;
+  const sql = `UPDATE Recipes SET recipeName=? WHERE recipeID=?`;
+  const values = [recipeName, id];
   db.pool.query(sql, values, (err, result) => {
     if (err) {
       console.error("Database error:", err);

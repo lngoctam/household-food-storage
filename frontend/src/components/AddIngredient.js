@@ -9,8 +9,13 @@ const NewIngredient = ({ existingIngredients, fetchIngredients }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if (!ingredientName.trim()) {
+      setError("The category name cannot be empty");
+      return;
+    }
+
     // Check for duplicates
-    if (existingIngredients.includes(ingredientName)) {
+    if (existingIngredients.includes(ingredientName.trim())) {
       setError("This ingredient name already exists.");
       return;
     }

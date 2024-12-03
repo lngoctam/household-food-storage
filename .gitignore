@@ -45,3 +45,4 @@
 /backend/yarn-error.log*
 
 /backend/db-connector.js
+backend/server_side_step_4_draft/db-connector.js

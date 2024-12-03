@@ -9,13 +9,16 @@ const NewCategory = ({ existingCategories, fetchCategories }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Check for duplicates
-    if (existingCategories.includes(categoryName)) {
+    if (!categoryName.trim()) {
+      setError("The category name cannot be empty");
+      return;
+    }
+
+    if (existingCategories.includes(categoryName.trim())) {
       setError("This category name already exists.");
       return;
     }
 
-    // Add new category
     setError("");
     axios
       .post(`${url}/categories`, { catName: categoryName })

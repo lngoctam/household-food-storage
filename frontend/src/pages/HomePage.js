@@ -5,6 +5,7 @@ const HomePage = () => {
   return (
     <div>
       <Header header="OVERVIEW" />
+      {/* <h2 className="text-center" style={{ color: 'red' }}>In process of doing "Analytical DB and BI Assignment" </h2> */}
       <p className="container fw-normal">
         In modern daily life, food waste is a constant struggle. In 2010, food
         waste was estimated to be around 30-40 percent of the food supply in the

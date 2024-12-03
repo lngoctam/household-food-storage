@@ -30,7 +30,7 @@ const ViewRecipe = () => {
   return (   
     <Recipe
           key={recipe.recipeID}
-          recipe={recipe.recipeID}
+          recipeID={recipe.recipeID}
           recipeName={recipe.recipeName}
           calories={recipe.calories}
           servings={recipe.servings}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "../components/Header";
 import AddIngredientList from "../components/AddIngredientList";
-import url from "../data/setting";
+import URL from "../data/setting";
 import { Link } from "react-router-dom";
 
 const IngredientListsPage = () => {
@@ -42,8 +42,9 @@ const IngredientListsPage = () => {
 
   const fetchIngredientLists = () => {
     axios
-      .get(`${url}/ingredientLists`)
+      .get(`${URL}/ingredientLists`)
       .then((res) => {
+        console.log(res.data);
         setIngredientLists(res.data);
         // setExistingIngredientLists(res.data.map((il) => il.unitName));
       })
@@ -56,11 +57,10 @@ const IngredientListsPage = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete(`${url}/ingredientLists/delete/${id}`)
+      .delete(`${URL}/ingredientLists/delete/${id}`)
       .then(() => fetchIngredientLists()) // Refetch data after delete
       .catch((err) => console.error("Error deleting ingredient lists:", err));
   };
-
 
   return (
     <div>
@@ -90,22 +90,27 @@ const IngredientListsPage = () => {
                   Quantity needed
                 </th>
                 <th scope="col" className="text-center col-sm-1">
+                  Unit
+                </th>
+                <th scope="col" className="text-center col">
                   Action
                 </th>
               </tr>
             </thead>
             <tbody>
               {ingredientLists.map((item, index) => {
+                // console.log("item: ", item);
                 return (
                   <tr className="text-center" key={item.ingredientListID}>
-                    <th scope="row" style={{ width: "12%" }}>
+                    <th scope="row" style={{ width: "5%" }}>
                       {index + 1}
                     </th>
-                    <td style={{ width: "12%" }}>{item.recipeID}</td>
+                    <td style={{ width: "5%" }}>{item.recipeID}</td>
                     <td style={{ width: "12%" }}>{item.recipeName}</td>
                     <td style={{ width: "12%" }}>{item.ingredientID}</td>
-                    <td style={{ width: "12%" }}>{item.ingredientName}</td>                      
+                    <td style={{ width: "18%" }}>{item.ingredientName}</td>
                     <td style={{ width: "12%" }}>{item.quantityNeeded}</td>
+                    <td style={{ width: "8%" }}>{item.unitName}</td>
                     <td style={{ width: "30%" }}>
                       {item.ingredientListID && (
                         <div>
@@ -116,7 +121,7 @@ const IngredientListsPage = () => {
                             DELETE
                           </button>
                           <Link
-                            // to={`/ingredientLists/update/${item.ingredientListID}`}
+                            to={`/ingredientLists/update/${item.ingredientListID}`}
                             className="btn btn-outline-info btn-sm mx-2"
                           >
                             UPDATE

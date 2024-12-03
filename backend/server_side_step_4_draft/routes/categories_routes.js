@@ -26,19 +26,35 @@ router.get("/:id", (req, res) => {
 
 //create a new category
 router.post("/", (req, res) => {
-  const sql = "INSERT INTO Categories (`catName`) VALUES (?)";
-  const values = req.body.catName;
-  db.pool.query(sql, [values], (err, data) => {
-    if (err) {
-      console.log("Error:", err);
-      return res.status(500).json("Error");
+  const { categoryName } = req.body;
+
+  // Check if category already exists
+  db.pool.query(
+    "SELECT * FROM categories WHERE name = ?",
+    [categoryName],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      if (result.length > 0) {
+        return res.status(409).json({ error: "Category already exists" });
+      }
+
+      // adding the new category
+      db.pool.query(
+        "INSERT INTO categories (name) VALUES (?)",
+        [categoryName],
+        (err) => {
+          if (err) {
+            return res.status(500).json({ error: "Failed to add category" });
+          }
+
+          res.status(201).json({ message: "Category added successfully" });
+        }
+      );
     }
-    const newCat = {
-      catID: data.insertId,
-      catName: values,
-    };
-    res.status(201).json(newCat); 
-  });
+  );
 });
 
 //delete a Category by ID

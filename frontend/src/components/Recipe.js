@@ -55,14 +55,8 @@ const Recipe = (props) => {
           {instructions}
         </div>
         <div>
-          <button
-            className="btn btn-outline-danger btn-sm"
-            // onClick={() => handleDelete(item.ingredientID)}
-          >
-            DELETE
-          </button>
           <Link
-            // to={`/ingredients/update/${item.ingredientID}`}
+            to={`/recipes/update/${props.recipeID}`}
             className="btn btn-outline-info btn-sm mx-2"
           >
             UPDATE

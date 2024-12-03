@@ -9,8 +9,13 @@ const NewUnit = ({ existingUnits, fetchUnits }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if (!unitName.trim()) {
+      setError("The category name cannot be empty");
+      return;
+    }
+
     // Check for duplicates
-    if (existingUnits.includes(unitName)) {
+    if (existingUnits.includes(unitName.trim())) {
       setError("This unit name already exists.");
       return;
     }

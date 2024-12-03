@@ -9,8 +9,13 @@ const NewStorage = ({ existingStorages, fetchStorages }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if (!storageName.trim()) {
+      setError("The category name cannot be empty");
+      return;
+    }
+
     // Check for duplicates
-    if (existingStorages.includes(storageName)) {
+    if (existingStorages.includes(storageName.trim())) {
       setError("This storage name already exists.");
       return;
     }

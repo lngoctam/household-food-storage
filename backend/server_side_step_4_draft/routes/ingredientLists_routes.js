@@ -78,13 +78,13 @@ router.post("/", (req, res) => {
         return res.status(500).json("Error");
       }
       const newIngredientList = {
-        ingredientListID: result.insertId,
+        ingredientListID: result.insertId, 
         recipeID,
         ingredientID,
         quantityNeeded,
         unitName,
       };
-      res.status(201).json(newIngredientList);
+      res.status(201).json(newIngredientList); 
     }
   );
 });
@@ -110,7 +110,6 @@ router.delete("/delete/:ingredientListID", (req, res) => {
 
 //update Ingredient List by using ID
 router.patch("/update/:id", (req, res) => {
-  console.log("Received data:", req.body);
   const id = req.params.id;
   console.log("ingredientListID " + id);
   const { ingredientID, quantityNeeded, unitName } = req.body;

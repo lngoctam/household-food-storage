@@ -6,26 +6,21 @@ import url from "../data/setting";
 
 const AddRecipe = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const recipeNames = state ? state.recipeNames : [];
+  const [selectedCategory, setSelectedCategory] = useState([]);
   const initialValues = {
     recipeName: "Sample Recipe",
     calories: "100",
-    servings: "3",
+    servings: 3,
     instruction: "Sample instruction",
     prepTime: "5 mins",
     cookTime: "10 mins",
     totalTime: "15 mins",
-    catID: 1,
+    catID: null,
   };
   const [recipes, setRecipes] = useState(initialValues);
-  const [selectedCategory, setSelectedCategory] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [existingRecipeNames, setExistingRecipeNames] = useState([]);
 
-  function handleCatSelect(selected) {
-    setSelectedCategory(selected);
-  }
-  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -40,8 +35,21 @@ const AddRecipe = () => {
         console.error("Error fetching categories:", error);
       }
     };
-
     fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchRecipeNames = async () => {
+      try {
+        const response = await axios.get(`${url}/recipes`);
+        setExistingRecipeNames(
+          response.data.map((recipe) => recipe.recipeName)
+        );
+      } catch (error) {
+        console.error("Error fetching existing recipes:", error);
+      }
+    };
+    fetchRecipeNames();
   }, []);
 
   function handleChange(event) {
@@ -55,13 +63,21 @@ const AddRecipe = () => {
     });
   }
 
+  const handleCatSelect = (selected) => {
+    setRecipes((prev) => ({
+      ...prev,
+      catID: selected.length ? selected[0].value : null,
+    }));
+  };
+
   function submitRecipe(event) {
     event.preventDefault();
-    if (recipeNames.includes(recipes.recipeName)) {
-      alert("This recipe name already exists. Please choose a different name.");
-      return; // Prevent form submission
+    if (existingRecipeNames.includes(recipes.recipeName)) {
+      return;
     }
-    console.log("Submitting recipe:", recipes);
+    if (!recipes.catID || recipes.catID === null) {
+      return;
+    }
 
     axios
       .post(`${url}/recipes`, recipes)
@@ -98,6 +114,11 @@ const AddRecipe = () => {
                   value={recipes.recipeName}
                   placeholder="Recipe name"
                 />
+                {existingRecipeNames.includes(recipes.recipeName) && (
+                  <small className="text-danger">
+                    This recipe name already exists.
+                  </small>
+                )}
               </div>
               <div className="form-group">
                 <label htmlFor="Calories">Calories</label>
@@ -169,11 +190,22 @@ const AddRecipe = () => {
                 className="form-control"
                 options={categories}
                 onChange={handleCatSelect}
-                values={selectedCategory}
+                values={recipes.catID ? [{ value: recipes.catID }] : []}
                 name="category"
               />
+              {!recipes.catID && (
+                <small className="text-danger">Please select a category.</small>
+              )}
             </div>
-            <button type="submit" className="btn btn-outline-primary mt-3">
+            <button
+              type="submit"
+              className="btn btn-outline-primary mt-3"
+              disabled={
+                existingRecipeNames.includes(recipes.recipeName) ||
+                !recipes.catID ||
+                recipes.catID === ""
+              }
+            >
               Add
             </button>
           </form>
