@@ -4,8 +4,9 @@ const router = express.Router();
 
 //get data for Ingredients page
 router.get("/", (req, res) => {
-  const sql = `SELECT * FROM Ingredients
-                ORDER BY Ingredients.ingredientName`;
+  const sql = `SELECT i.*, s.storageName
+              FROM Ingredients i
+              LEFT JOIN Storages s on i.storageID = s.storageID`;
   db.pool.query(sql, (err, data) => {
     if (err) {
       console.error("Error executing query:", err);
@@ -27,21 +28,23 @@ router.get("/:id", (req, res) => {
 
 //create a new Ingredient
 router.post("/", (req, res) => {
-  const sql = "INSERT INTO Ingredients (`ingredientName`) VALUES (?)";
-  const values = req.body.ingredientName;
-  db.pool.query(sql, [values], (err, data) => {
+  console.log("Add Ingredient:", req.body);
+
+  const { ingredientName, storageID } = req.body;
+  const sql = `INSERT INTO Ingredients (ingredientName, storageID) VALUES (?, ?)`;
+  db.pool.query(sql, [ingredientName, storageID], (err, data) => {
     if (err)
       return res
         .status(500)
-        .json({ error: "Error deleting ingredient", details: err });
+        .json({ error: "Error adding ingredient", details: err });
     const newIngredient = {
       ingredientID: data.insertId,
-      ingredientName: values,
+      ingredientName,
+      storageID,
     };
-    res.status(201).json(newIngredient); //
+    res.status(201).json(newIngredient);
   });
 });
-
 
 //delete a Ingredient by ID
 router.delete("/delete/:ingredientID", (req, res) => {
@@ -69,19 +72,21 @@ router.delete("/delete/:ingredientID", (req, res) => {
 router.patch("/update/:id", (req, res) => {
   const id = req.params.id;
   console.log("ingredientID " + id);
-  const { ingredientName } = req.body;
-  const sql = `UPDATE Ingredients SET ingredientName=? WHERE ingredientID=?`;
-  const values = [ingredientName, id];
+  const { ingredientName, storageID } = req.body;
+  const sql = `UPDATE Ingredients SET ingredientName=?, storageID=? WHERE ingredientID=?`;
+  const values = [ingredientName, storageID, id];
   db.pool.query(sql, values, (err, result) => {
     if (err)
       return res
         .status(500)
-        .json({ error: "Error deleting ingredient", details: err });
+        .json({ error: "Error updating ingredient", details: err });
     if (result.affectedRows === 0) {
       return res.json("Ingredient not found");
     }
-    res.status(201).json({
+    console.log("Preparing to send response:", { ingredientName, storageID });
+    res.status(200).json({
       message: `Ingredient ${id} updated successfully!`,
+      updatedValues: { ingredientName, storageID },
     });
   });
 });

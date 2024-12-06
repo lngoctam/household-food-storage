@@ -28,7 +28,7 @@ const RecipesPage = () => {
     value: category.catID,
     label: category.catName,
   }));
-
+  catOptions.push({ value: "others", label: "Others" })
   console.log("categories", categories);
 
   const fetchRecipes = () => {
@@ -64,9 +64,15 @@ const RecipesPage = () => {
   const FilterByCat = (selectedOption) => {
     setSelectedCat(selectedOption);
     if (selectedOption) {
-      setFilteredRecipes(
-        recipes.filter((r) => r.catName === selectedOption.label)
-      );
+      if (selectedOption.label === "Others") {
+        // Filter recipes where catName is null
+        setFilteredRecipes(recipes.filter((r) => r.catName === null));
+      } else {
+        // Filter recipes with selected category
+        setFilteredRecipes(
+          recipes.filter((r) => r.catName === selectedOption.label)
+        );
+      }
     } else {
       setFilteredRecipes(recipes);
     }

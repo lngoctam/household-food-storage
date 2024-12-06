@@ -14,7 +14,9 @@ const IngredientsPage = () => {
       .get(`${url}/ingredients`)
       .then((res) => {
         setIngredients(res.data);
-        setExistingIngredients(res.data.map((ingredient) => ingredient.ingredientName));
+        setExistingIngredients(
+          res.data.map((ingredient) => ingredient.ingredientName)
+        );
       })
       .catch((err) => console.error("Error fetching ingredients:", err));
   };
@@ -33,7 +35,10 @@ const IngredientsPage = () => {
   return (
     <div className="container mt-4">
       <Header header="LIST OF INGREDIENTS" />
-      <AddIngredient fetchIngredients={fetchIngredients} existingIngredients={existingIngredients}  />
+      <AddIngredient
+        fetchIngredients={fetchIngredients}
+        existingIngredients={existingIngredients}
+      />
       <div className="table-responsive">
         <table className="table table-sm table-bordered table-hover">
           <thead>
@@ -45,6 +50,9 @@ const IngredientsPage = () => {
                 Name
               </th>
               <th scope="col" className="text-center col-sm-1">
+                Storage
+              </th>
+              <th scope="col" className="text-center col-sm-1">
                 Action
               </th>
             </tr>
@@ -53,11 +61,12 @@ const IngredientsPage = () => {
             {ingredients.map((item, index) => {
               return (
                 <tr className="text-center" key={item.ingredientID}>
-                  <th scope="row" style={{ width: "33.33%" }}>
+                  <th scope="row" style={{ width: "25%" }}>
                     {index + 1}
                   </th>
-                  <td style={{ width: "33.33%" }}>{item.ingredientName}</td>
-                  <td style={{ width: "33.33%" }}>
+                  <td style={{ width: "25%" }}>{item.ingredientName}</td>
+                  <td style={{ width: "25%" }}>{item.storageName}</td>
+                  <td style={{ width: "25%" }}>
                     {item.ingredientID && (
                       <div>
                         <button

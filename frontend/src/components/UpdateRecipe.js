@@ -8,7 +8,7 @@ const UpdateRecipe = () => {
   const { id } = useParams(); 
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const [recipes, setRecipes] = useState({
     recipeName: "",
     calories: "",
     servings: "",
@@ -27,7 +27,7 @@ const UpdateRecipe = () => {
         console.log("id", id)
       const response = await axios.get(`${url}/recipes/${id}`);
       const recipe = response.data[0];
-      setFormData({
+      setRecipes({
         recipeName: recipe.recipeName,
         calories: recipe.calories,
         servings: recipe.servings,
@@ -67,7 +67,7 @@ const UpdateRecipe = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setRecipes((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -75,8 +75,8 @@ const UpdateRecipe = () => {
 
   const handleCategoryChange = (selected) => {
     setSelectedCategory(selected[0]);
-    setFormData((prevData) => ({
-      ...prevData,
+    setRecipes((prevRecipe) => ({
+      ...prevRecipe,
       catID: selected[0].value,
     }));
   };
@@ -85,8 +85,8 @@ const UpdateRecipe = () => {
     e.preventDefault();
     try {
       const updatedRecipe = {
-        ...formData,
-        catID: selectedCategory?.value || formData.catID,
+        ...recipes,
+        catID: selectedCategory?.value || recipes.catID,
       };
       await axios.patch(`${url}/recipes/update/${id}`, updatedRecipe, {
         headers: { "Content-Type": "application/json" },
@@ -117,7 +117,7 @@ const UpdateRecipe = () => {
                   type="text"
                   name="recipeName"
                   className="form-control"
-                  value={formData.recipeName}
+                  value={recipes.recipeName}
                   onChange={handleChange}
                 />
               </div>
@@ -127,7 +127,7 @@ const UpdateRecipe = () => {
                   type="number"
                   name="calories"
                   className="form-control"
-                  value={formData.calories}
+                  value={recipes.calories}
                   onChange={handleChange}
                 />
               </div>
@@ -137,7 +137,7 @@ const UpdateRecipe = () => {
                   type="number"
                   name="servings"
                   className="form-control"
-                  value={formData.servings}
+                  value={recipes.servings}
                   onChange={handleChange}
                 />
               </div>
@@ -147,7 +147,7 @@ const UpdateRecipe = () => {
                   name="instruction"
                   className="form-control"
                   rows="3"
-                  value={formData.instruction}
+                  value={recipes.instruction}
                   onChange={handleChange}
                 ></textarea>
               </div>
@@ -157,7 +157,7 @@ const UpdateRecipe = () => {
                   type="text"
                   name="prepTime"
                   className="form-control"
-                  value={formData.prepTime}
+                  value={recipes.prepTime}
                   onChange={handleChange}
                 />
               </div>
@@ -167,7 +167,7 @@ const UpdateRecipe = () => {
                   type="text"
                   name="cookTime"
                   className="form-control"
-                  value={formData.cookTime}
+                  value={recipes.cookTime}
                   onChange={handleChange}
                 />
               </div>
@@ -177,7 +177,7 @@ const UpdateRecipe = () => {
                   type="text"
                   name="totalTime"
                   className="form-control"
-                  value={formData.totalTime}
+                  value={recipes.totalTime}
                   onChange={handleChange}
                 />
               </div>
