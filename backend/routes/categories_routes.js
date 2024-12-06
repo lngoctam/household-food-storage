@@ -4,7 +4,8 @@ const router = express.Router();
 
 //get data for Categories page
 router.get("/", (req, res) => {
-  const sql = "SELECT * FROM Categories";
+  const sql = `SELECT * FROM Categories
+                ORDER BY Categories.catName`;
   db.pool.query(sql, (err, data) => {
     if (err) {
       console.error("Error executing query:", err);

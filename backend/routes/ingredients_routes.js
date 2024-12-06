@@ -4,7 +4,8 @@ const router = express.Router();
 
 //get data for Ingredients page
 router.get("/", (req, res) => {
-  const sql = "SELECT * FROM Ingredients";
+  const sql = `SELECT * FROM Ingredients
+                ORDER BY Ingredients.ingredientName`;
   db.pool.query(sql, (err, data) => {
     if (err) {
       console.error("Error executing query:", err);

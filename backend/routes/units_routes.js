@@ -4,11 +4,12 @@ const router = express.Router();
 
 //get data for Units page
 router.get("/", (req, res) => {
-  const sql = "SELECT * FROM Units";
+  const sql = `SELECT * FROM Units
+              ORDER BY Units.unitName`;
   db.pool.query(sql, (err, data) => {
     if (err) {
       console.error("Error executing query:", err);
-    return res.status(500).json({ message: "Database error", error: err });
+      return res.status(500).json({ message: "Database error", error: err });
     }
     return res.json(data);
   });
@@ -37,7 +38,7 @@ router.post("/", (req, res) => {
       unitID: data.insertId,
       unitName: values,
     };
-    res.status(201).json(newUnit); 
+    res.status(201).json(newUnit);
   });
 });
 

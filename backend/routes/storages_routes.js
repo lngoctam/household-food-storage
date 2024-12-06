@@ -4,7 +4,8 @@ const router = express.Router();
 
 //get data for Storages page
 router.get("/", (req, res) => {
-  const sql = "SELECT * FROM Storages";
+  const sql = `SELECT * FROM Storages
+                ORDER BY Storages.storageName`;
   db.pool.query(sql, (err, data) => {
     if (err) {
       console.error("Error executing query:", err);

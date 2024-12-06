@@ -54,7 +54,12 @@ router.get("/existing", async (req, res) => {
 //get a specific Ingredient List by ID
 router.get("/:id", (req, res) => {
   const id = req.params.id;
-  const sql = "SELECT * FROM Ingredient_Lists WHERE ingredientListID=?";
+  const sql = `SELECT il.*, r.recipeName, i.ingredientName
+               FROM Ingredient_Lists il
+              JOIN Recipes r ON il.recipeID = r.recipeID
+              JOIN Ingredients i ON il.ingredientID = i.ingredientID
+              WHERE ingredientListID=?`;
+  // const sql = `SELECT * FROM Ingredient_Lists WHERE ingredientListID=?`;
   db.pool.query(sql, [id], (err, data) => {
     if (err) return res.json("Error");
     return res.json(data);

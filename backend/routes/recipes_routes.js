@@ -4,7 +4,11 @@ const router = express.Router();
 
 //get data for Recipes page
 router.get("/", (req, res) => {
-  const sql = "SELECT * FROM Recipes";
+  // const sql = "SELECT * FROM Recipes";
+  const sql = `SELECT Recipes.*, Categories.catName, Categories.catID
+               FROM Recipes
+               LEFT JOIN Categories ON Recipes.catID = Categories.catID
+               ORDER BY Recipes.recipeName ASC`;
   db.pool.query(sql, (err, data) => {
     if (err) {
       console.error("Error executing query:", err);

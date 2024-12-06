@@ -3,12 +3,34 @@ import axios from "axios";
 import Header from "../components/Header";
 import url from "../data/setting";
 import { Link } from "react-router-dom";
+import Select from "react-select";
 
 const RecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
-  const [filteredRecipes, setFilteredRecipes] = useState([]);  
-
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [selectedCat, setSelectedCat] = useState([]);
   const [recipeNames, setRecipeNames] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const fetchCategories = () => {
+    axios
+      .get(`${url}/categories`)
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch((err) => console.error("Error fetching categories", err));
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const catOptions = categories.map((category) => ({
+    value: category.catID,
+    label: category.catName,
+  }));
+
+  console.log("categories", categories);
+
   const fetchRecipes = () => {
     axios
       .get(`${url}/recipes`)
@@ -39,6 +61,17 @@ const RecipesPage = () => {
     );
   };
 
+  const FilterByCat = (selectedOption) => {
+    setSelectedCat(selectedOption);
+    if (selectedOption) {
+      setFilteredRecipes(
+        recipes.filter((r) => r.catName === selectedOption.label)
+      );
+    } else {
+      setFilteredRecipes(recipes);
+    }
+  };
+
   return (
     <div className="container mt-4">
       <Header header="LIST OF RECIPES" />
@@ -49,18 +82,28 @@ const RecipesPage = () => {
             state: { recipeNames },
           }}
           className="btn btn-outline-success"
+          style={{ width: "300px", marginBottom: "20px" }}
         >
           ADD A NEW RECIPE
         </Link>
       </div>
-      <div className="table-responsive">
-        <input
-          type="text"
-          className="form-control"
-          onChange={Filter}
-          placeholder="search by recipe name"
-          style={{ width: "300px", marginBottom: "20px" }}
-        />
+      <div>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <input
+            type="text"
+            className="form-control"
+            onChange={Filter}
+            placeholder="search by recipe name"
+            style={{ width: "300px"}}
+          />
+          <Select
+            options={catOptions}
+            onChange={FilterByCat}
+            isClearable
+            placeholder="Filter by category"
+            value={selectedCat}
+          />
+        </div>
         <table className="table table-sm table-bordered table-hover">
           <thead>
             <tr>
@@ -85,7 +128,7 @@ const RecipesPage = () => {
                 <tr className="text-center" key={item.recipeID}>
                   <th scope="row">{index + 1}</th>
                   <td>{item.recipeName}</td>
-                  <td>{item.catID}</td>
+                  <td>{item.catName}</td>
                   <td>
                     {item.recipeID && (
                       <div>

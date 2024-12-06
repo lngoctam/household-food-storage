@@ -66,6 +66,10 @@ const UpdateIngredientLists = () => {
     }
   };
 
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
   const fetchUnits = async () => {
     try {
       const response = await axios.get(`${url}/units`);
@@ -93,6 +97,7 @@ const UpdateIngredientLists = () => {
           value: ingredient.ingredientID,
         }))
       );
+      console.log("Fetched Ingredients:", ingredients);
     } catch (error) {
       console.error("Error fetching ingredients:", error);
     }
@@ -101,10 +106,7 @@ const UpdateIngredientLists = () => {
   useEffect(() => {
     fetchIngredients();
   }, []);
-
-  useEffect(() => {
-    fetchRecipes();
-  }, []);
+  
 
   useEffect(() => {
     // Fetch the current ingredient list
@@ -117,7 +119,7 @@ const UpdateIngredientLists = () => {
           ingredientName: ingredientData.ingredientName,
           quantityNeeded: ingredientData.quantityNeeded,
           unitName: ingredientData.unitName,
-          newUnitName: "",
+          // newUnitName: "",
         });
         setSelectedIngredient({
           id: ingredientData.ingredientID,
@@ -243,7 +245,6 @@ const UpdateIngredientLists = () => {
                       type="number"
                       name="quantityNeeded"
                       value={
-                        ingredientLists.newQuantityNeeded ||
                         ingredientLists.quantityNeeded
                       }
                       onChange={handleUpdate}

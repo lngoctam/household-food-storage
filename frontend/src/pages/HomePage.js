@@ -3,7 +3,7 @@ import Header from "../components/Header";
 
 const HomePage = () => {
   return (
-    <div>
+    <div  className="container mt-4">
       <Header header="OVERVIEW" />
       {/* <h2 className="text-center" style={{ color: 'red' }}>In process of doing "Analytical DB and BI Assignment" </h2> */}
       <p className="container fw-normal">
