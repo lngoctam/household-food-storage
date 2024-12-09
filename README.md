@@ -2,7 +2,7 @@ In modern daily life, food waste is a constant struggle. In 2010, food waste was
 
 Citation: <br/>
 Date: 11/11/2024 <br/>
-Based on the CS340 React Starter Code
+Based on the CS340 React Starter Code <br/>
 URL: 
 
 
