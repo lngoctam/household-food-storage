@@ -1,3 +1,15 @@
+// citation for this routes
+// 11/11/2024
+// Based on https://www.geeksforgeeks.org/axios-in-react-a-guide-for-beginners/
+//          https://github.com/osu-cs340-ecampus/react-starter-app
+//          https://getbootstrap.com/
+// Explanation of Originality:  Based on the sources and modified to develop a complete 
+// frontend interface for a storage food household management application. 
+// Axios was used for integrating with the backend API to handle CRUD operations, 
+// and Bootstrap was applied to style components for a modern, responsive design. 
+// The application was customized to fit the specific requirements of the project, 
+// including dynamic data rendering, filtering, and search functionality.
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 

@@ -6,39 +6,7 @@ import URL from "../data/setting";
 import { Link } from "react-router-dom";
 
 const IngredientListsPage = () => {
-  // const [ingredientLists, setIngredientLists] = useState([]);
-
-  // const handleDelete = (id) => {
-  //   axios
-  //     .delete(`${url}/ingredientLists/delete/${id}`)
-  //     .then((res) => {
-  //       setIngredientLists((prevIngredientLists) =>
-  //         prevIngredientLists.filter(
-  //           (ingredientList) => ingredientList.ingredientListID !== id
-  //         )
-  //       );
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-  // function addIngredientList(newIngredientList) {
-  //   setIngredientLists((prevIngredientLists) => {
-  //     return [...prevIngredientLists, newIngredientList];
-  //   });
-  // }
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${url}/ingredientLists`)
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       setIngredientLists(res.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
   const [ingredientLists, setIngredientLists] = useState([]);
-  const [existingIngredientLists, setExistingIngredientLists] = useState([]);
 
   const fetchIngredientLists = () => {
     axios
@@ -46,7 +14,6 @@ const IngredientListsPage = () => {
       .then((res) => {
         console.log(res.data);
         setIngredientLists(res.data);
-        // setExistingIngredientLists(res.data.map((il) => il.unitName));
       })
       .catch((err) => console.error("Error fetching ingredient lists:", err));
   };

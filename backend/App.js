@@ -3,8 +3,8 @@ const cors = require("cors");
 const PORT = 23326;
 
 const app = express();
-app.use(express.json());
-app.use(cors());
+app.use(express.json()); // parse incoming JSON from the request body
+app.use(cors()); // handle request from a frontend that hoisted on a different port or domain
 
 const storagesRoutes = require("./routes/storages_routes");
 const unitsRoutes = require("./routes/units_routes");

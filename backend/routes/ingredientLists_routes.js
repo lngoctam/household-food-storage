@@ -1,3 +1,10 @@
+// citation for this routes
+// 11/11/2024
+// Based on https://github.com/osu-cs340-ecampus/react-starter-app
+// Explanation of Originality: Based on the source and modified to match the requirements for handling 
+// ingredientLists-related routes in this project. Modifications include adjusting endpoint paths and logic 
+// to interact with the `IngredientLists` table in the database. Additional error-handling mechanisms were 
+// implemented to ensure proper responses for missing or invalid data.
 const express = require("express");
 const db = require("../db-connector");
 const router = express.Router();

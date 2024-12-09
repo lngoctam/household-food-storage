@@ -1,12 +1,16 @@
-// Get an instance of mysql we can use in the app
+// Citation for this js file
+// Date 12/8/2024
+// Copied from https://github.com/osu-cs340-ecampus/react-starter-app#backend-setup-nodejsexpress
+// Explanation of Originality: Copied from the source to establish a MySQL database connection in the course materials.
+
 const mysql = require("mysql2");
 
 const pool = mysql.createPool({
   connectionLimit: 10,
   host: "classmysql.engr.oregonstate.edu",
-  user: "cs340_lengoc",
-  password: "2133",
-  database: "cs340_lengoc",  
+  user: "...",
+  password: "...",
+  database: "...",
 });
 
 pool.getConnection((err) => {
