@@ -7,7 +7,7 @@ URL: <br/>
 https://github.com/osu-cs340-ecampus/react-starter-app<br/>
 https://www.geeksforgeeks.org/axios-in-react-a-guide-for-beginners/<br/>
 https://getbootstrap.com/<br/>
-https://www.youtube.com/watch?v=enOsPhp2Z6Q
+https://www.youtube.com/watch?v=enOsPhp2Z6Q<br/>
 Degree of Originality: partitial adaption and expansion by adding new features to meet the requirements of this project
 
 
