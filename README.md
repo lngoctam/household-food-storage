@@ -2,11 +2,12 @@ In modern daily life, food waste is a constant struggle. In 2010, food waste was
 
 Citation: <br/>
 Date: 11/11/2024 <br/>
-Adapted from the CS340 React Starter Code, GeeksforGeeks Axios guide, and Bootstrap templates <br/>
+Adapted from the CS340 React Starter Code, GeeksforGeeks Axios guide, and Bootstrap templates and video from Youtube <br/>
 URL: <br/>
 https://github.com/osu-cs340-ecampus/react-starter-app<br/>
 https://www.geeksforgeeks.org/axios-in-react-a-guide-for-beginners/<br/>
 https://getbootstrap.com/<br/>
-
+https://www.youtube.com/watch?v=enOsPhp2Z6Q
+Degree of Originality: partitial adaption and expansion by adding new features to meet the requirements of this project
 
 
